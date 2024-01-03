@@ -6,7 +6,7 @@ btn_send_example     = {'command': "(?i)💸 Send|send",                        
 btn_get_all_users    = {'command': "(?i)📄 Users list|/user_list|user list",                                                         'text': '📄 Users list'}
 btn_get_transactions = {'command': "(?i)📄 Transactions|/transactions|transactions",                                              "text": "📄 Transactions"}
 
-btn_send             = {'command': "(?i)(send) (?P<handler>.+?) (?P<amount>\d*\.?\d{1,4}|\d*\,?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN
+btn_send             = {'command': "(?i)(send) (?P<handler>.+?) (?P<amount>\d*[\.,]?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN
 
 
 btn_admin_add_amount_command = {'command': "(?i)(add) (?P<handler>.*) (?P<amount>-?\d*\.?\d{1,4}|\d*\,?\d{1,4})", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN AND IS ADMIN ONLY
