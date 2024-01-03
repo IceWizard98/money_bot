@@ -1,0 +1,8 @@
+.env
+.idea
+.venv/
+venv/
+users
+transactions
+keyboard.py
+__pycache__
