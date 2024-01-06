@@ -1,5 +1,10 @@
 # Telegram Transaction Bot
 
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Python](https://img.shields.io/badge/Python-3.10-blue)](https://www.python.org/)
+[![aiogram](https://img.shields.io/badge/aiogram-3-red)](https://github.com/aiogram/aiogram)
+[![Contributions welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen.svg)](https://github.com/IceWizard98/money_bot/issues)
+
 This Telegram bot allows users to manage transactions between a group of friends. Users can send and receive tokens, view transaction history, and perform administrative functions.
 
 ## Setup
@@ -43,4 +48,9 @@ This bot uses the aiogram library for Telegram bot development.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Authors
+
+- [@IceWizard98](https://www.github.com/IceWizard98)
+
 
