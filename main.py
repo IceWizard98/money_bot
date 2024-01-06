@@ -1,10 +1,11 @@
 import asyncio
 import logging
-from handlers import dp, bot
+from handlers import dp, bot, router
 
 
 async def main() -> None:
-    await dp.start_polling(bot)
+    dp.include_router(router)
+    await dp.start_polling(bot, allowed_updates=["message", "callback_query"])
 
 
 if __name__ == "__main__":

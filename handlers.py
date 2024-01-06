@@ -1,14 +1,16 @@
 import logging
 import os
 import time
+
 import functions
 import keyboard
 
+from src.paginator          import Paginator
 from aiogram.enums          import ParseMode
 from aiogram.filters        import CommandStart
-from aiogram.types          import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.utils.markdown import hbold
-from aiogram                import types, Dispatcher, F
+from aiogram import types, Dispatcher, F, Router
 from aiogram                import Bot
 from dotenv                 import load_dotenv
 from datetime               import datetime
@@ -27,10 +29,11 @@ if not TOKEN_ICON:
 logger = logging.getLogger()
 dp     = Dispatcher()
 bot    = Bot(TOKEN, parse_mode=ParseMode.HTML)
+router = Router(name="router")
 
 
-@dp.message(CommandStart())
-@dp.message(F.text.regexp(rf"{keyboard.btn_home['command']}"))
+@router.message(CommandStart())
+@router.message(F.text.regexp(rf"{keyboard.btn_home['command']}"))
 async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
@@ -50,7 +53,7 @@ async def command_start_handler(message: Message) -> None:
     ))
 
 
-@dp.message(F.text.regexp(rf"{keyboard.btn_send['command']}").as_('params'))
+@router.message(F.text.regexp(rf"{keyboard.btn_send['command']}").as_('params'))
 async def command_send_to_user_handler(message: Message, params) -> None:
 
     if not params.group('handler'):
@@ -100,12 +103,12 @@ async def command_send_to_user_handler(message: Message, params) -> None:
     await message.answer(f"Amount sent to <b>{receiver}: {amount}{TOKEN_ICON}</b>\n\n<b>Description:</b>\n{description}")
 
 
-@dp.message(F.text.regexp(rf"{keyboard.btn_send_example['command']}"))
+@router.message(F.text.regexp(rf"{keyboard.btn_send_example['command']}"))
 async def command_send_example_handler(message: Message) -> None:
     await message.answer(f"Send a message that meet the following example: \n\n<code>send user_handler 12 description</code>")
 
 
-@dp.message(F.text.regexp(rf"{keyboard.btn_get_all_users['command']}"))
+@router.message(F.text.regexp(rf"{keyboard.btn_get_all_users['command']}"))
 async def command_show_all_users_handler(message: Message) -> None:
     user_list = functions.load_users()
     to_send   = ''
@@ -116,7 +119,7 @@ async def command_show_all_users_handler(message: Message) -> None:
     await message.answer(to_send)
 
 
-@dp.message(F.text.regexp(rf"{keyboard.btn_admin_add_amount_command['command']}").as_('params'))
+@router.message(F.text.regexp(rf"{keyboard.btn_admin_add_amount_command['command']}").as_('params'))
 async def command_add_amount_handler(message: Message, params) -> None:
 
     users = functions.load_users()
@@ -147,7 +150,7 @@ async def command_add_amount_handler(message: Message, params) -> None:
     await message.answer(f"Amount added to <b>{receiver}: {amount}{TOKEN_ICON}</b>")
 
 
-@dp.message(F.text.regexp(rf"{keyboard.btn_get_transactions['command']}").as_('params'))
+@router.message(F.text.regexp(rf"{keyboard.btn_get_transactions['command']}").as_('params'))
 async def command_get_transactions_handler(message: Message) -> None:
     transactions = functions.load_transactions()
 
@@ -156,17 +159,28 @@ async def command_get_transactions_handler(message: Message) -> None:
         await message.answer('No transactions')
         return
 
-    to_send = ''
-    for index in range(max(total_transactions-100, total_transactions)):
+    pagination = Paginator(
+        prev_btn='◀️',
+        next_btn='▶️',
+        router=router,
+        items=[],
+        key='transaction_paginated'
+    )
+
+    range_i = reversed(range(max(total_transactions-50, 0), total_transactions))
+
+    for index in range_i:
         transaction = transactions[index]
-        to_send += (f"<b>To:</b> <code>{transaction['receiver']}</code> <b>From:</b> <code>{transaction['sender']}</code>\n"
-                    f"<b>Amount:</b> <em>{transaction['amount']}{TOKEN_ICON}</em>\n\n"
-                    f"<b>Description:</b> <code>{transaction['description']}</code>\n\n\n"
-                    f"<b>Date:</b> <code>{datetime.fromtimestamp(transaction['date']).strftime( DATE_FORMAT )}</code>\n\n")
+        pagination.items.append(
+            f"<b>To:</b> <code>{transaction['receiver']}</code> <b>From:</b> <code>{transaction['sender']}</code>\n"
+            f"<b>Amount:</b> <em>{transaction['amount']}{TOKEN_ICON}</em>\n\n"
+            f"<b>Description:</b> <code>{transaction['description']}</code>\n\n\n"
+            f"<b>Date:</b> <code>{datetime.fromtimestamp(transaction['date']).strftime( DATE_FORMAT )}</code>\n\n"
+        )
 
-    await message.answer(to_send)
+    await message.answer(pagination.get_current_page(), reply_markup=pagination.get_keyboard().as_markup())
 
 
-@dp.message()
+@router.message()
 async def echo_handler(message: types.Message) -> None:
     await message.answer(f"Comando non riconosciuto {message.text}")
