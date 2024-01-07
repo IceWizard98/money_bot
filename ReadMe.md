@@ -37,6 +37,10 @@ After the first start, edit the users file and set the `admin` key in the admin'
 - 🔑 **Admin Functionality:** Admins can add tokens to users' accounts.
 - 📜 **Transaction History:** View the most recent transactions.
 
+## Releases
+
+- [V 1.0.0 first release for basic use cases](https://github.com/IceWizard98/money_bot/releases/tag/V1.0.0)
+
 ## 🤝 Contributing
 
 Feel free to contribute by opening issues or pull requests.
