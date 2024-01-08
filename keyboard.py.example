@@ -1,22 +1,23 @@
 from aiogram.types          import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import KeyboardBuilder
 
-btn_home             = {'command': '(?i)🏠 Home|home',                                                                                         'text': '🏠 Home'}
-btn_send_example     = {'command': "(?i)💸 Send|send",                                                                                    'text': '💸 Send'}
-btn_get_all_users    = {'command': "(?i)📄 Users list|/user_list|user list",                                                         'text': '📄 Users list'}
-btn_get_transactions = {'command': "(?i)📄 Transactions|/transactions|transactions",                                              "text": "📄 Transactions"}
+btn_home             = {'command': '(?i)🏠 Home|home',                               'text': '🏠 Home'}
+btn_send_example     = {'command': "(?i)💸 Send|send",                               'text': '💸 Send'}
+btn_get_all_users    = {'command': "(?i)📄 Users list|/user_list|user list",         'text': '📄 Users list'}
+btn_get_transactions = {'command': "(?i)📄 Transactions|/transactions|transactions", "text": "📄 Transactions"}
 
-btn_send             = {'command': "(?i)(send) (?P<handler>.+?) (?P<amount>\d*[\.,]?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN
+command_send             = {'command': "(?i)(send) (?P<handler>.+?) (?P<amount>\d*\.?\d{1,4}|\d*\,?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN
+command_request          = {'command': "(?i)(request) (?P<handler>.+?) (?P<amount>\d*\.?\d{1,4}|\d*\,?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN
+command_deny_request     = {'command': "(?i)(deny) (?P<handler>.+?) (?P<amount>\d*\.?\d{1,4}|\d*\,?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''}
 
-
-btn_admin_add_amount_command = {'command': "(?i)(add) (?P<handler>.*) (?P<amount>-?\d*\.?\d{1,4}|\d*\,?\d{1,4})", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN AND IS ADMIN ONLY
+btn_admin_add_amount_command = {'command': "(?i)(add) (?P<handler>.+?) (?P<amount>\d*\.?\d{1,4}|\d*\,?\d{1,4})(?:(?=\s)(?P<description>\s.*))?", 'text': ''} #THIS COMMAND IS HIDDEN, CAN ONLY BE HAND WRITEN AND IS ADMIN ONLY
 
 
 def main_keyboard() -> ReplyKeyboardMarkup:
     builder = KeyboardBuilder( button_type=KeyboardButton )
 
     for btn in [ btn_home, btn_send_example, btn_get_all_users, btn_get_transactions ]:
-        builder.button(text=btn['text'])
+        builder.button(text=btn['text'], callback_data='pippo')
 
     # todo dynamic structure in 2 by 2 grid
     builder.adjust( 2,2 )
